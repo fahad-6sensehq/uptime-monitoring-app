@@ -114,19 +114,43 @@ function EnvironmentCard({ env }: { env: EnvironmentStats }) {
         <div className="mt-1 flex h-10 items-center gap-1">
           {Array.from({ length: 30 }).map((_, index) => {
             const day = 30 - index;
-            const baseColor = "bg-zinc-800";
+            const baseColor = "bg-zinc-900";
+            const incident = env.incidents[index];
             const hasIncident =
-              index < env.incidents.length
-                ? env.incidents[index].impact === "major"
+              incident != null
+                ? incident.impact === "major"
                   ? "bg-red-500"
-                  : "bg-amber-400"
+                  : incident.impact === "partial"
+                  ? "bg-amber-400"
+                  : "bg-sky-400"
                 : baseColor;
+
+            const label =
+              incident != null
+                ? `${new Date(incident.startedAt).toLocaleDateString(
+                    undefined,
+                    {
+                      month: "short",
+                      day: "2-digit",
+                    }
+                  )} · ${
+                    incident.impact === "major"
+                      ? "Major outage"
+                      : incident.impact === "partial"
+                      ? "Partial outage"
+                      : "Minor incident"
+                  }`
+                : "";
             return (
               <div
                 key={day}
                 className="flex h-full flex-1 flex-col items-center justify-end gap-1"
               >
-                <div className={`w-full rounded-full ${hasIncident}`} />
+                <div
+                  className={`h-full w-full rounded-full ${hasIncident}`}
+                  title={label}
+                  aria-label={label}
+                />
               </div>
             );
           })}
@@ -135,15 +159,15 @@ function EnvironmentCard({ env }: { env: EnvironmentStats }) {
 
       <div className="space-y-1">
         <p className="text-[0.7rem] uppercase tracking-wide text-zinc-500">
-          Recent incidents
+          Last 5 incidents
         </p>
         {env.incidents.length === 0 ? (
           <p className="text-xs text-zinc-500">
-            No incidents in the last 30 days.
+            No incidents in the last 5 days.
           </p>
         ) : (
           <ul className="divide-y divide-zinc-900 rounded-xl border border-zinc-900 bg-zinc-950/80">
-            {env.incidents.map((incident) => (
+            {env.incidents.slice(0, 5).map((incident) => (
               <li
                 key={incident.id}
                 className="flex items-center justify-between gap-3 px-3 py-2.5 text-xs"
@@ -197,7 +221,8 @@ export default function UptimeMonitor() {
                 Uptime Monitor
               </h1>
               <p className="mt-1 max-w-xl text-sm text-zinc-400">
-                How production and beta environments are performing over the last month.
+                How production and beta environments are performing over the
+                last month.
               </p>
             </div>
             <div className="flex items-center gap-3 text-xs text-zinc-500">
