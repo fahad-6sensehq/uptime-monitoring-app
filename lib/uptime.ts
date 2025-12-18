@@ -20,8 +20,8 @@ export const MOCK_DATA: Record<EnvironmentKey, EnvironmentStats> = {
   production: {
     name: "HTV Production",
     url: "https://htv.vc",
-    uptimePercent: 99.92,
-    totalDowntimeMinutes: 36,
+    uptimePercent: 99.95,
+    totalDowntimeMinutes: 30,
     incidents: [
       {
         id: "p1",
@@ -34,7 +34,7 @@ export const MOCK_DATA: Record<EnvironmentKey, EnvironmentStats> = {
         id: "p2",
         startedAt: "2025-12-05T11:40:00Z",
         endedAt: "2025-12-05T11:52:00Z",
-        durationMinutes: 12,
+        durationMinutes: 11,
         impact: "partial",
       },
       {
